@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const requiredKeys = ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'ADMIN_PASSWORD'];
 
@@ -25,7 +25,8 @@ function parseEnv(text) {
   }, {});
 }
 
-const env = parseEnv(readFileSync('.env', 'utf8'));
+const fileEnv = existsSync('.env') ? parseEnv(readFileSync('.env', 'utf8')) : {};
+const env = { ...fileEnv, ...process.env };
 const missing = requiredKeys.filter(key => !env[key]);
 
 if (missing.length > 0) {
