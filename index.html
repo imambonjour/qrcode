@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistem QR Konsumsi — Ambil QR code unik kamu untuk konsumsi acara perpisahan kelulusan.">
+  <title>QR Konsumsi — Perpisahan Kelulusan</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- QR Code Generator -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__brand" id="nav-brand">🎓 QR Konsumsi</a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="nav__link nav__link--active" id="nav-home">Siswa</a></li>
+        <li><a href="scan.html" class="nav__link" id="nav-scan">Scan</a></li>
+        <li><a href="admin.html" class="nav__link" id="nav-admin">Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="page-wrapper" style="padding-top: 80px;">
+    <div class="container container--narrow">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="header__icon" aria-hidden="true">🎓</div>
+        <h1 class="header__title">
+          <span class="text-accent">Selamat</span> Kelulusan!
+        </h1>
+        <p class="header__subtitle">Masukkan ID dan Nama kamu untuk mendapatkan QR Code konsumsi</p>
+      </header>
+
+      <!-- Login Form Section -->
+      <section id="login-section" class="card">
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="input-student-id" class="form-label">ID Siswa</label>
+            <input 
+              type="text" 
+              id="input-student-id" 
+              class="form-input" 
+              placeholder="Contoh: 121_01"
+              required
+              autocomplete="off"
+              autofocus
+            >
+            <span class="form-hint">ID kelas dan nomor (contoh: 121_01)</span>
+          </div>
+
+          <div class="form-group">
+            <label for="input-nama" class="form-label">Nama Lengkap</label>
+            <input 
+              type="text" 
+              id="input-nama" 
+              class="form-input" 
+              placeholder="Contoh: Addienza Shafa Ningtyas"
+              required
+              autocomplete="name"
+            >
+            <span class="form-hint">Ketik sesuai nama terdaftar (huruf besar/kecil tidak masalah)</span>
+          </div>
+
+          <div id="login-error" class="form-error" role="alert" aria-live="polite"></div>
+
+          <button type="submit" id="btn-login" class="btn btn--primary btn--full btn--lg mt-4">
+            <span>🔍</span> Ambil QR Code
+          </button>
+        </form>
+      </section>
+
+      <!-- QR Code Result Section (hidden by default) -->
+      <section id="qr-section" class="card hidden">
+        <div class="qr-container">
+          <div class="qr-frame" id="qr-frame">
+            <div id="qr-code"></div>
+          </div>
+          <div class="qr-info">
+            <div class="qr-info__name" id="qr-name"></div>
+            <div class="qr-info__class" id="qr-class"></div>
+          </div>
+          <p class="text-center" style="font-size: var(--text-sm); color: var(--warm-600); max-width: 300px;">
+            Tunjukkan QR ini ke panitia di pintu untuk mendapatkan konsumsi kamu.
+          </p>
+          <button type="button" id="btn-back" class="btn btn--outline btn--sm mt-4">
+            ← Kembali
+          </button>
+        </div>
+      </section>
+
+      <!-- Already Claimed Section (hidden by default) -->
+      <section id="claimed-section" class="card hidden">
+        <div class="scan-result scan-result--duplicate">
+          <div class="scan-result__icon" aria-hidden="true">⚠️</div>
+          <div class="scan-result__title">Konsumsi Sudah Diambil</div>
+          <div class="scan-result__detail" id="claimed-detail"></div>
+          <button type="button" id="btn-back-claimed" class="btn btn--outline btn--sm mt-4">
+            ← Kembali
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/env.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/student.js"></script>
+</body>
+</html>
