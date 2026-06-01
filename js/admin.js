@@ -6,6 +6,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Lucide icons
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+
   // Auth elements
   const authSection    = document.getElementById('auth-section');
   const dashSection    = document.getElementById('dashboard-section');
@@ -189,7 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = parseCSV(e.target.result);
 
       if (result.errors.length > 0) {
-        csvErrors.innerHTML = result.errors.map(err => `<div>⚠️ ${err}</div>`).join('');
+        csvErrors.innerHTML = result.errors.map(err => `<div style="display: flex; align-items: center; gap: 6px;"><i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i> ${err}</div>`).join('');
+        if (window.lucide) window.lucide.createIcons();
         csvErrors.classList.remove('hidden');
       } else {
         csvErrors.classList.add('hidden');
@@ -242,7 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
   btnConfirmUpload.addEventListener('click', async () => {
     if (parsedCSVRows.length === 0) return;
 
-    btnConfirmUpload.textContent = '⏳ Mengimport...';
+    btnConfirmUpload.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="display:inline-block; vertical-align:middle; width:16px; height:16px; margin-right:6px;"></i> Mengimport...';
+    if (window.lucide) window.lucide.createIcons();
     btnConfirmUpload.disabled = true;
 
     try {
@@ -294,7 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('[admin] import error:', err);
       showToast('Gagal mengimport: ' + (err.message || 'Error tidak diketahui'), 'error');
     } finally {
-      btnConfirmUpload.textContent = '✅ Import ke Database';
+      btnConfirmUpload.innerHTML = '<i data-lucide="check" style="display:inline-block; vertical-align:middle; width:16px; height:16px; margin-right:6px;"></i> Import ke Database';
+      if (window.lucide) window.lucide.createIcons();
       btnConfirmUpload.disabled = false;
     }
   });
@@ -333,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
     filtered.forEach((s, i) => {
       const tr = document.createElement('tr');
       const statusBadge = s.claimed
-        ? '<span class="badge badge--success">✅ Sudah</span>'
-        : '<span class="badge badge--warning">⏳ Belum</span>';
+        ? '<span class="badge badge--success" style="display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Sudah</span>'
+        : '<span class="badge badge--warning" style="display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> Belum</span>';
 
       tr.innerHTML = `
         <td>${i + 1}</td>
@@ -345,6 +353,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       studentTbody.appendChild(tr);
     });
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   searchInput.addEventListener('input',   () => renderStudents(allStudents));

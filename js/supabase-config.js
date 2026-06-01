@@ -51,11 +51,20 @@ function showToast(message, type = 'info', duration = 4000) {
     document.body.appendChild(container);
   }
 
-  const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+  const icons = {
+    success: '<i data-lucide="check-circle-2"></i>',
+    error: '<i data-lucide="x-circle"></i>',
+    warning: '<i data-lucide="alert-triangle"></i>',
+    info: '<i data-lucide="info"></i>'
+  };
   const toast = document.createElement('div');
   toast.className = `toast toast--${type}`;
   toast.innerHTML = `<span>${icons[type] || ''}</span><span>${message}</span>`;
   container.appendChild(toast);
+
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
 
   setTimeout(() => {
     toast.classList.add('removing');

@@ -5,6 +5,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Lucide icons
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+
   // Scanner elements
   const btnStartScan = document.getElementById('btn-start-scan');
   const btnStopScan  = document.getElementById('btn-stop-scan');
@@ -78,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btnStartScan.classList.add('hidden');
       btnStopScan.classList.remove('hidden');
       setScannerStatus('Scanner aktif. Arahkan kamera ke QR siswa.', 'success');
-      showToast('Scanner aktif 📷', 'info');
+      showToast('Scanner aktif', 'info');
 
     } catch (err) {
       console.error('Scanner error:', err);
@@ -266,19 +271,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (result.success) {
       type = 'success';
-      icon = '✅';
+      icon = '<i data-lucide="check-circle"></i>';
       title = 'Berhasil!';
       detail = `${result.nama}`;
       showToast(`${result.nama} berhasil diverifikasi`, 'success');
     } else if (result.message.includes('sudah')) {
       type = 'duplicate';
-      icon = '⚠️';
+      icon = '<i data-lucide="alert-triangle"></i>';
       title = 'Sudah Diambil!';
       detail = result.nama ? `${result.nama}` : result.message;
       showToast('Konsumsi sudah diambil sebelumnya', 'warning');
     } else {
       type = 'invalid';
-      icon = '❌';
+      icon = '<i data-lucide="x-circle"></i>';
       title = 'Tidak Valid';
       detail = result.message;
       showToast('QR Code tidak valid', 'error');
@@ -292,6 +297,10 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
     scanResultContainer.classList.remove('hidden');
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
 
     setTimeout(() => {
       scanResultContainer.innerHTML = '';
@@ -321,25 +330,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (scanHistoryLog.length === 0) {
       scanHistory.innerHTML = `
         <div class="empty-state" style="padding: var(--space-4);">
-          <div class="empty-state__icon" style="font-size:24px;" aria-hidden="true">📋</div>
+          <div class="empty-state__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
           <div class="empty-state__text" style="font-size: var(--text-sm);">Belum ada scan</div>
         </div>
       `;
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
       return;
     }
 
     scanHistory.innerHTML = scanHistoryLog.map(entry => {
-      const statusIcon = entry.success ? '✅' : (entry.message.includes('sudah') ? '⚠️' : '❌');
+      const statusIcon = entry.success ? '<i data-lucide="check" style="width:16px; height:16px;"></i>' : (entry.message.includes('sudah') ? '<i data-lucide="alert-triangle" style="width:16px; height:16px;"></i>' : '<i data-lucide="x" style="width:16px; height:16px;"></i>');
       const statusColor = entry.success ? 'var(--success-icon)' : (entry.message.includes('sudah') ? 'var(--warning-icon)' : 'var(--error-icon)');
 
       return `
         <div class="scan-history-item">
           <span class="scan-history-item__time">${entry.time}</span>
-          <span style="color: ${statusColor};">${statusIcon}</span>
+          <span style="color: ${statusColor}; display: flex; align-items: center;">${statusIcon}</span>
           <span style="font-weight:500; color: var(--warm-800);">${escapeHTML(entry.nama)}</span>
         </div>
       `;
     }).join('');
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   btnClearHistory.addEventListener('click', () => {

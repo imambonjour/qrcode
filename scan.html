@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="css/style.css">
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <!-- QR Scanner Library -->
   <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
@@ -70,7 +72,7 @@
   <!-- Navigation -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__inner">
-      <a href="index.html" class="nav__brand" id="nav-brand">🎓 QR Konsumsi</a>
+      <a href="index.html" class="nav__brand" id="nav-brand"><i data-lucide="graduation-cap"></i> QR Konsumsi</a>
       <ul class="nav__links">
         <li><a href="index.html" class="nav__link" id="nav-home">Siswa</a></li>
         <li><a href="scan.html" class="nav__link nav__link--active" id="nav-scan">Scan</a></li>
@@ -84,7 +86,7 @@
 
       <!-- Header -->
       <header class="header">
-        <div class="header__icon" aria-hidden="true">📷</div>
+        <div class="header__icon" aria-hidden="true"><i data-lucide="camera"></i></div>
         <h1 class="header__title">Scanner QR</h1>
         <p class="header__subtitle">Arahkan kamera ke QR code siswa</p>
       </header>
@@ -118,10 +120,10 @@
         <!-- Scanner controls -->
         <div class="flex justify-center gap-3 mt-4">
           <button type="button" id="btn-start-scan" class="btn btn--primary btn--sm">
-            📷 Mulai Scan
+            <i data-lucide="camera"></i> Mulai Scan
           </button>
           <button type="button" id="btn-stop-scan" class="btn btn--outline btn--sm hidden">
-            ⏹ Stop
+            <i data-lucide="square"></i> Stop
           </button>
         </div>
       </div>
@@ -131,7 +133,7 @@
 
       <!-- Manual Input (fallback) -->
       <div class="card mb-6">
-        <h4 class="mb-4">⌨️ Input Manual</h4>
+        <h4 class="mb-4" style="display: flex; align-items: center; gap: 6px;"><i data-lucide="keyboard" style="width: 18px; height: 18px;"></i> Input Manual</h4>
         <p style="font-size: var(--text-xs); color: var(--warm-400); margin-bottom: var(--space-2);">
           Gunakan ini jika kamera tidak bisa membaca QR code
         </p>
@@ -152,12 +154,12 @@
       <!-- Scan History -->
       <div class="card">
         <div class="flex justify-between items-center mb-4">
-          <h4>📋 Riwayat Scan</h4>
+          <h4 style="display: flex; align-items: center; gap: 6px;"><i data-lucide="clipboard-list" style="width: 18px; height: 18px;"></i> Riwayat Scan</h4>
           <button type="button" id="btn-clear-history" class="btn btn--ghost btn--sm">Bersihkan</button>
         </div>
         <div id="scan-history">
           <div class="empty-state" style="padding: var(--space-4);">
-            <div class="empty-state__icon" style="font-size:24px;" aria-hidden="true">📋</div>
+            <div class="empty-state__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
             <div class="empty-state__text" style="font-size: var(--text-sm);">Belum ada scan</div>
           </div>
         </div>

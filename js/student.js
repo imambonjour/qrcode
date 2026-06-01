@@ -5,6 +5,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Lucide icons
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+
   const loginForm   = document.getElementById('login-form');
   const loginSection = document.getElementById('login-section');
   const qrSection   = document.getElementById('qr-section');
