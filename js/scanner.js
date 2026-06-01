@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let scanHistoryLog = [];
   let lastScannedToken = '';
   let scanCooldown = false;
+  let isStartingScanner = false;
 
   // Init
   renderInitialScannerStatus();
@@ -41,13 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
   btnStopScan.addEventListener('click', stopScanner);
 
   async function startScanner() {
+    if (isScanning || isStartingScanner) return;
+
+    isStartingScanner = true;
+    btnStartScan.disabled = true;
+    setScannerStatus('Meminta izin kamera...', 'info');
+
     try {
       if (!window.Html5Qrcode || !window.Html5QrcodeSupportedFormats) {
         throw new Error('Library scanner QR gagal dimuat. Periksa koneksi internet lalu refresh halaman.');
       }
 
       ensureCameraSupported();
-      await requestCameraPermission();
+      const cameraId = await getPreferredCameraId();
 
       if (!html5QrCode) {
         html5QrCode = new window.Html5Qrcode('scanner-reader');
@@ -61,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       await html5QrCode.start(
-        { facingMode: { ideal: 'environment' } },
+        cameraId,
         config,
         onScanSuccess,
         onScanError
@@ -75,28 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (err) {
       console.error('Scanner error:', err);
-      
-      if (!html5QrCode) {
-        showCameraError(err);
-        return;
-      }
-
-      try {
-        await html5QrCode.start(
-          { facingMode: { ideal: 'user' } },
-          { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 },
-          onScanSuccess,
-          onScanError
-        );
-        isScanning = true;
-        btnStartScan.classList.add('hidden');
-        btnStopScan.classList.remove('hidden');
-        setScannerStatus('Scanner aktif memakai kamera depan.', 'success');
-        showToast('Scanner aktif (kamera depan) 📷', 'info');
-      } catch (err2) {
-        console.error('Camera fallback error:', err2);
-        showCameraError(err2);
-      }
+      showCameraError(err);
+    } finally {
+      isStartingScanner = false;
+      btnStartScan.disabled = false;
     }
   }
 
@@ -142,13 +131,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  async function requestCameraPermission() {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' } },
-      audio: false,
+  async function getPreferredCameraId() {
+    const cameras = await window.Html5Qrcode.getCameras();
+
+    if (!cameras || cameras.length === 0) {
+      throw new Error('Kamera tidak ditemukan di perangkat ini.');
+    }
+
+    const backCamera = cameras.find(camera => {
+      const label = (camera.label || '').toLowerCase();
+      return label.includes('back') ||
+        label.includes('rear') ||
+        label.includes('environment') ||
+        label.includes('belakang');
     });
 
-    stream.getTracks().forEach(track => track.stop());
+    return (backCamera || cameras[cameras.length - 1]).id;
   }
 
   function isCameraSecureOrigin() {
